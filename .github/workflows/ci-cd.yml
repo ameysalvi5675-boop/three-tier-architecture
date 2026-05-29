@@ -189,7 +189,7 @@ jobs:
         with:
           directory: k8s/
           framework: kubernetes
-          soft_fail: true  # Soft fail for K8s (some checks may not apply)
+          soft_fail: true  # Soft fail for K8s (some checks may not apply).
           output_format: cli
 
   # ==============================================================
