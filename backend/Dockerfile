@@ -11,7 +11,7 @@ FROM node:20-alpine AS production
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 # Security: remove unnecessary packages
-RUN apk add --no-cache git
+RUN apk add --no-cache git=2.52.5-r0
 
 WORKDIR /app
 
