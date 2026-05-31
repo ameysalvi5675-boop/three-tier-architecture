@@ -1,5 +1,5 @@
 # ==============================================================
-# Jerney EKS Cluster - Auto Mode
+# Jerney EKS Cluster - Managed Node Groups
 # ==============================================================
 
 data "aws_availability_zones" "available" {
@@ -28,7 +28,7 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true # Cost-saving for dev; use one per AZ for prod
 
-  # Tags required for EKS Auto Mode to discover subnets
+  # Tags required for EKS to discover subnets
   public_subnet_tags = {
     "kubernetes.io/role/elb" = 1
   }
@@ -38,19 +38,13 @@ module "vpc" {
   }
 }
 
-# ---- EKS Cluster (Auto Mode) ----
+# ---- EKS Cluster (with Managed Node Groups) ----
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.31"
 
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
-
-  # Auto Mode — EKS manages node groups, kube-proxy, CoreDNS, etc.
-  cluster_compute_config = {
-    enabled    = true
-    node_pools = ["general-purpose", "system"]
-  }
 
   # Networking
   vpc_id     = module.vpc.vpc_id
@@ -60,7 +54,7 @@ module "eks" {
   cluster_endpoint_public_access  = true
   cluster_endpoint_private_access = true
 
-  # Auth mode required for Auto Mode
+  # Auth mode for API access
   authentication_mode = "API"
 
   # Security: envelope encryption for secrets at rest
@@ -79,4 +73,27 @@ module "eks" {
 
   # Allow current caller (your IAM user/role) to manage the cluster
   enable_cluster_creator_admin_permissions = true
+
+  # ---- Managed Node Groups ----
+  eks_managed_node_groups = {
+    general_purpose = {
+      name            = "general-purpose-nodes"
+      min_size        = 1
+      max_size        = 3
+      desired_size    = 2 # This will create 2 nodes immediately
+
+      instance_types  = ["t3.medium"] # Cost-effective for dev
+      disk_size       = 20
+
+      # Tags for workload scheduling
+      labels = {
+        Environment = var.environment
+        Role        = "general-purpose"
+      }
+
+      tags = {
+        "ManagedNodeGroup" = "general-purpose"
+      }
+    }
+  }
 }
