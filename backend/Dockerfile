@@ -7,12 +7,15 @@ RUN npm ci --only=production && npm cache clean --force
 # ---- Production stage ----
 FROM node:20-alpine AS production
 
+RUN apk add --no-cache dumb-init
+
 # Security: run as non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
+
 # Security: remove unnecessary packages
 RUN apk add --no-cache git=2.52.0-r0
-RUN apk add --no-cache dumb-init
+
 
 WORKDIR /app
 
@@ -28,5 +31,5 @@ USER appuser
 EXPOSE 5000
 
 # Security: use dumb-init for proper signal handling (PID 1 problem)
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "src/index.js"]
