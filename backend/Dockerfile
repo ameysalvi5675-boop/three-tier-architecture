@@ -12,6 +12,7 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
 # Security: remove unnecessary packages
 RUN apk add --no-cache git=2.52.0-r0
+RUN apk add --no-cache dumb-init
 
 WORKDIR /app
 
