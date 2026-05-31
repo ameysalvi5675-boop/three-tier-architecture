@@ -307,7 +307,7 @@ spec:
           effect: "NoSchedule"
       containers:
         - name: frontend
-          image: ghcr.io/ameysalvi5675-boop/three-tier-Architecture/jerney-frontend:fe9a404
+          image: ghcr.io/ameysalvi5675-boop/three-tier-architecture/jerney-frontend:fe9a404
           ports:
             - containerPort: 8080
               protocol: TCP
