@@ -77,13 +77,13 @@ module "eks" {
   # ---- Managed Node Groups ----
   eks_managed_node_groups = {
     general_purpose = {
-      name            = "general-purpose-nodes"
-      min_size        = 1
-      max_size        = 3
-      desired_size    = 2 # This will create 2 nodes immediately
+      name         = "general-purpose-nodes"
+      min_size     = 1
+      max_size     = 3
+      desired_size = 2 # This will create 2 nodes immediately
 
-      instance_types  = ["t3.medium"] # Cost-effective for dev
-      disk_size       = 20
+      instance_types = ["t3.medium"] # Cost-effective for dev
+      disk_size      = 20
 
       # Tags for workload scheduling
       labels = {
