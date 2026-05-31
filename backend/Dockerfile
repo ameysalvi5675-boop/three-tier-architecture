@@ -7,6 +7,7 @@ RUN npm ci --only=production && npm cache clean --force
 # ---- Production stage ----
 FROM node:20-alpine AS production
 
+# hadolint ignore=DL3018
 RUN apk add --no-cache dumb-init
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
