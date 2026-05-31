@@ -28,5 +28,5 @@ USER appuser
 EXPOSE 5000
 
 # Security: use dumb-init for proper signal handling (PID 1 problem)
-ENTRYPOINT ["dumb-init", "--"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["node", "src/index.js"]
